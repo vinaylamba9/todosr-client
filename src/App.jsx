@@ -25,7 +25,8 @@ function App() {
 
   const getSpacedRepetitionTasks = async () => {
     const queryParams = {
-      userID: user._id
+      userID: user._id,
+      timeZoneOffset: new Date().getTimezoneOffset()
     }
     const url = new URL(import.meta.env.VITE_BASE_SERVER_URL + '/get-spaced-repetition')
     url.search = new URLSearchParams(queryParams).toString()
@@ -40,7 +41,8 @@ function App() {
   
   const getTodayTasks = async () => {
     const queryParams = {
-      userID: user._id
+      userID: user._id,
+      timeZoneOffset: new Date().getTimezoneOffset()
     }
     const url = new URL(import.meta.env.VITE_BASE_SERVER_URL + '/get-today-tasks')
     url.search = new URLSearchParams(queryParams).toString()
