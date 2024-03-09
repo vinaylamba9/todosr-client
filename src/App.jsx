@@ -15,6 +15,7 @@ function App() {
   const updateTodayTasks = useAppStore((state) => state.updateTodayTasks)
   const updateSpacedRepetitionsTasks = useAppStore((state) => state.updateSpacedRepetitionsTasks)
   const [username, setUsername] = useState('')
+  const [isMobileTablet, setIsMobileTablet] = useState(window.innerWidth <= 768);
 
   useEffect(() => {
     if(user) {
@@ -22,6 +23,16 @@ function App() {
         getTodayTasks();
     }
   }, [JSON.stringify(user)])
+
+  useEffect(() => {
+      const handleResize = () => {
+          setIsMobileTablet(window.innerWidth <= 768);
+      };
+      window.addEventListener('resize', handleResize);
+      return () => {
+          window.removeEventListener('resize', handleResize);
+      };
+    }, [])
 
   const getSpacedRepetitionTasks = async () => {
     const queryParams = {
@@ -80,10 +91,11 @@ function App() {
             {spacedRepetitionTasks.length > 0 &&
               <section className='flex flex-col items-center'>
                 <section className='w-11/12 sm:w-5/6 md:w-2/3'>
-                  <h4 className='self-start text-xl md:text-2xl border-l-4 border-l-lime-400 pl-2 my-2'>Spaced Repetition</h4>
+                  <h4 className='self-start text-xl md:text-2xl border-l-4 border-l-lime-400 pl-2 mt-2'>Spaced Repetition</h4>
+                  {isMobileTablet && <span className='text-xs pl-4 text-red-400'><i>Swipe Right on a Task to Delete</i></span>}
                   {spacedRepetitionTasks.map(item => (
                     <section key={item._id} className='flex justify-center'>
-                      <Task task={item.task} taskStatus={item.completed} taskID={item._id}/>  
+                      <Task task={item.task} taskStatus={item.completed} taskID={item._id} isMobileTablet={isMobileTablet}/>  
                     </section>
                   ))}
                 </section>
@@ -92,13 +104,14 @@ function App() {
             
               <section className='flex flex-col items-center'>
               <section className='w-11/12 sm:w-5/6 md:w-2/3'>
-                <h4 className='self-start border-l-4 border-l-rose-400 pl-2 my-2 text-xl md:text-2xl'>What I did - Today</h4>
+                <h4 className='self-start border-l-4 border-l-rose-400 pl-2 mt-2 text-xl md:text-2xl'>What I did - Today</h4>
+                {isMobileTablet && <span className='text-xs pl-4 text-red-400'><i>Swipe Right on a Task to Delete</i></span>}
                 {todayTasks.length > 0 
                   ? 
                     <>
                       {todayTasks.map(item => (
                         <section key={item._id} className='flex justify-center'>
-                          <Task task={item.task} taskStatus={item.completed} taskID={item._id}/>  
+                          <Task task={item.task} taskStatus={item.completed} taskID={item._id} isMobileTablet={isMobileTablet}/>  
                         </section>
                       ))}
                     </>

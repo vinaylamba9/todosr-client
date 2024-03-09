@@ -24,5 +24,10 @@ export const useAppStore = create((set) => ({
             return item;
         })
         return {todayTasks: updatedTodayTasks, spacedRepetitionTasks: updatedSRTasks}
+    }),
+    deleteTask: (taskID) => set((state) => {
+        const updatedTodayTasks = state.todayTasks.filter(item => item._id !== taskID)
+        const updatedSRTasks = state.spacedRepetitionTasks.filter(item => item._id !== taskID)
+        return {todayTasks: updatedTodayTasks, spacedRepetitionTasks: updatedSRTasks}
     })
 }))
