@@ -116,7 +116,7 @@ function App() {
                       ))}
                     </>
                   : 
-                  <h6 className='italic text-sm md:text-base'>No tasks available...</h6>}
+                  <h6 className='italic text-sm md:text-base ml-4'>No tasks available...</h6>}
                 <button 
                   className='bg-carrot px-2 py-1 mt-[1rem] text-sm sm:text-base rounded-md cursor-pointer'
                   onClick={() => setOpenDialog(true)}

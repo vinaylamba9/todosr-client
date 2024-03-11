@@ -55,8 +55,8 @@ const Task = ({task, taskStatus, taskID, isMobileTablet}) => {
 
   return (
         <div className="w-full flex my-2 relative transition-transform ease-in-out duration-300 transform" {...handlers}>
-            <button onClick={() => removeTask()} className={`bg-red-600 px-2 py-1 text-sm md:text-base h-fit self-center
-            text-babypowder rounded-md ${isDeleteVisible ? '' : 'absolute top-0 right-0 bottom-0 hidden'}`}>DELETE</button>
+            <button onClick={() => removeTask()} className={`bg-babypowder px-2 py-1 text-sm md:text-base h-fit self-center border-2 border-red-600
+            text-nightblack rounded-md ${isDeleteVisible ? '' : 'absolute top-0 right-0 bottom-0 hidden'}`}>Delete</button>
             {isEditing ? (
             <input type='text' 
                 ref={inputRef} 
@@ -73,19 +73,19 @@ const Task = ({task, taskStatus, taskID, isMobileTablet}) => {
                     if(taskStatus) return;
                     setIsEditing(true)
                 }}
-                    className={`inline-block ml-[1rem] pt-1 text-sm md:text-base w-11/12 ${taskStatus && 'line-through bg-green-300'}`}>
+                    className={`inline-block ml-[1rem] pt-1 text-sm md:text-base w-11/12 rounded-sm ${taskStatus && 'line-through bg-green-300'}`}>
                     {currentTaskValue}
                 </label>
             )}
             {!taskStatus && <button
                     onClick={() => updateTaskStatus(true)} 
-                    className='bg-carrot py-1 text-sm md:text-base px-2 ml-2 h-fit self-center rounded-md'
+                    className='bg-carrot border-2 border-carrot py-1 text-sm md:text-base px-2 ml-2 h-fit self-center rounded-md'
                     >
                     Done
                 </button>
             }
-            {taskStatus && <button onClick={() => updateTaskStatus(false)} className='bg-nightblack px-2 ml-2 py-1 text-sm md:text-base h-fit self-center text-babypowder rounded-md'>Revert</button>}
-            {!isMobileTablet && <button onClick={() => removeTask()} className='bg-red-600 px-2 ml-2 py-1 text-sm md:text-base h-fit self-center text-babypowder rounded-md'>DEL</button>}
+            {taskStatus && <button onClick={() => updateTaskStatus(false)} className='bg-nightblack px-2 ml-2 py-1 border-2 border-nightblack text-sm md:text-base h-fit self-center text-babypowder rounded-md'>Revert</button>}
+            {!isMobileTablet && <button onClick={() => removeTask()} className='bg-babypowder border-2 border-red-600 px-2 ml-2 py-1 text-sm md:text-base h-fit self-center text-nightblack rounded-md'>DEL</button>}
         </div>
   )
 }
