@@ -78,13 +78,17 @@ function App() {
     }
   }
 
-
+  const logout = () => {
+    localStorage.clear()
+    updateUser(null)
+  }
 
   return (
     <>
       <main>
-        <nav className='mb-2'>
-        <h3 className='w-full text-center text-xl sm:text-2xl md:text-3xl mt-3 pb-1 border-b-nightblack border-b-2 font-sans'>{getToday()}</h3>
+        <nav className='mb-2 flex'>
+        <h3 className={`${user ? 'w-11/12 pl-[9%]' : 'w-full'} text-center text-xl sm:text-2xl md:text-3xl mt-3 pb-1 border-b-nightblack border-b-2 font-sans`}>{getToday()}</h3>
+        {user && <button onClick={logout} className='w-1/12 flex items-center justify-center sm:text-lg md:text-xl border-b-nightblack border-b-2 text-red-700'>LogOut</button>}
         </nav>
         {user && 
           <>
