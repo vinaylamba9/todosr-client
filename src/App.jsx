@@ -5,6 +5,7 @@ import Task from './components/Task'
 import Dialog from './components/Dialog'
 import { useAppStore } from './store'
 import login from './assets/login.png';
+import logouticon from './assets/logout-icon.png';
 
 function App() {
   const [openDialog, setOpenDialog] = useState(false)
@@ -87,8 +88,8 @@ function App() {
     <>
       <main>
         <nav className='mb-2 flex'>
-        <h3 className={`${user ? 'w-11/12 pl-[9%]' : 'w-full'} text-center text-xl sm:text-2xl md:text-3xl mt-3 pb-1 border-b-nightblack border-b-2 font-sans`}>{getToday()}</h3>
-        {user && <button onClick={logout} className='w-1/12 flex items-center justify-center sm:text-lg md:text-xl border-b-nightblack border-b-2 text-red-700'>LogOut</button>}
+        <h3 className={`${user ? 'w-11/12 pl-[8.33333%]' : 'w-full'} text-center text-xl sm:text-2xl md:text-3xl mt-3 pb-1 border-b-nightblack border-b-2 font-sans`}>{getToday()}</h3>
+        {user && <button onClick={logout} title='Logout' className='w-1/12 flex items-center justify-center sm:text-lg md:text-xl border-b-nightblack border-b-2 text-red-700'><img className='w-6 sm:w-7 md:w-8' alt='logout' src={logouticon} /></button>}
         </nav>
         {user && 
           <>
