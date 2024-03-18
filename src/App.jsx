@@ -100,7 +100,7 @@ function App() {
                   {isMobileTablet && <span className='text-xs pl-4 text-red-400'><i>Swipe Right on a Task to Delete</i></span>}
                   {spacedRepetitionTasks.map(item => (
                     <section key={item._id} className='flex justify-center'>
-                      <Task task={item.task} taskStatus={item.completed} taskID={item._id} isMobileTablet={isMobileTablet}/>  
+                      <Task task={item.task} dateCreated={item.dateCreated} taskStatus={item.completed} taskID={item._id} isMobileTablet={isMobileTablet}/>  
                     </section>
                   ))}
                 </section>
