@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
 import { useAppStore } from '../store';
 import { getRequestBody } from '../utils';
+import Loading from './Loading';
 
 const Dialog = ({ onSave, closeDialog }) => {
   const [taskDescription, setTaskDescription] = useState('');
 
   const userID = useAppStore((state) => state.user._id)
   const addTodayTask = useAppStore((state) => state.addTodayTask)
+  const [saveLoading, setSaveLoading] = useState(false)
 
   const createTask = async () => {
     const URL = import.meta.env.VITE_BASE_SERVER_URL + '/create-task'
     const fetchOptions = getRequestBody('POST', {taskDescription, userID, completed: false, dateCreated: new Date().toDateString()})
+    setSaveLoading(true);
     const response = await fetch(URL, fetchOptions);
     if(response.status === 200) {
       const data = await response.json();
@@ -19,6 +22,7 @@ const Dialog = ({ onSave, closeDialog }) => {
         setTaskDescription('')
       }
     }
+    setSaveLoading(false);
     closeDialog(false)
   }
 
@@ -41,7 +45,7 @@ const Dialog = ({ onSave, closeDialog }) => {
             className="bg-nightblack hover:bg-[#333] text-white px-4 py-1 rounded mr-2 text-sm sm:text-base"
             onClick={createTask}
           >
-            Save
+            {saveLoading ? <Loading /> : 'Save'}
           </button>
         </div>
       </div>

@@ -6,6 +6,7 @@ import Dialog from './components/Dialog'
 import { useAppStore } from './store'
 import login from './assets/login.png';
 import logouticon from './assets/logout-icon.png';
+import Loading from './components/Loading'
 
 function App() {
   const [openDialog, setOpenDialog] = useState(false)
@@ -15,6 +16,7 @@ function App() {
   const updateUser = useAppStore((state) => state.updateUser)
   const updateTodayTasks = useAppStore((state) => state.updateTodayTasks)
   const updateSpacedRepetitionsTasks = useAppStore((state) => state.updateSpacedRepetitionsTasks)
+  const [isLoading, setLoading] = useState(false)
   const [username, setUsername] = useState('')
   const [isMobileTablet, setIsMobileTablet] = useState(window.innerWidth <= 768);
 
@@ -58,6 +60,7 @@ function App() {
     }
     const url = new URL(import.meta.env.VITE_BASE_SERVER_URL + '/get-today-tasks')
     url.search = new URLSearchParams(queryParams).toString()
+    setLoading(true)
     const response = await fetch(url);
     if(response.status == 200) {
       const data = await response.json();
@@ -65,11 +68,13 @@ function App() {
         updateTodayTasks(data.tasks)
       }
     }
+    setLoading(false)
   }
 
   const createUser = async () => {
     const URL = import.meta.env.VITE_BASE_SERVER_URL + '/create-user'
     const fetchOptions = getRequestBody('POST', {username})
+    setLoading(true)
     const response = await fetch(URL, fetchOptions);
     const data = await response.json();
     if(data && data.user) {
@@ -77,6 +82,7 @@ function App() {
       updateUser(data.user)
       setUsername('')
     }
+    setLoading(false)
   }
 
   const logout = () => {
@@ -121,7 +127,7 @@ function App() {
                       ))}
                     </>
                   : 
-                  <h6 className='italic text-sm md:text-base ml-4'>No tasks available...</h6>}
+                  <h6 className='italic text-sm md:text-base ml-4'>{isLoading ? 'Loading...' : 'No tasks available...'}</h6>}
                 <button 
                   className='bg-carrot px-2 py-1 mt-[1rem] text-sm sm:text-base rounded-md cursor-pointer'
                   onClick={() => setOpenDialog(true)}
@@ -141,7 +147,7 @@ function App() {
               <label>Enter Username</label>
               <input onChange={(e) => setUsername(e.target.value)} value={username} className='border-2 mt-2 px-2 py-1 border-black rounded-md' placeholder='Username' />
               </div>
-             <button onClick={createUser} className='bg-carrot ml-3 w-11 rounded-md self-end px-2 py-1 hover:bg-[#ffa54f]'><img src={login} /></button>
+             <button onClick={createUser} className='bg-carrot ml-3 w-11 rounded-md self-end px-2 py-1 hover:bg-[#ffa54f]'> {isLoading ? <Loading color='nightblack'/> : <img src={login} />}</button>
           </div>
           </section>
         }

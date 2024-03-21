@@ -2,11 +2,15 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useAppStore } from '../store'
 import { getRequestBody } from '../utils'
 import { useSwipeable } from 'react-swipeable'
+import Loading from './Loading'
 
 const Task = ({task, taskStatus, dateCreated, taskID, isMobileTablet}) => {
     const [isEditing, setIsEditing] = useState(false)
     const [currentTaskValue, setCurrentTaskValue] = useState(task)
     const [isDeleteVisible, setIsDeleteVisible] = useState(false)
+    const [doneLoading, setDoneLoading] = useState(false)
+    const [revertLoading, setRevertLoading] = useState(false)
+    const [deleteLoading, setDeleteLoading] = useState(false)
 
     const updateTask = useAppStore((state) => state.updateTask)
     const deleteTask = useAppStore((state) => state.deleteTask)
@@ -25,12 +29,22 @@ const Task = ({task, taskStatus, dateCreated, taskID, isMobileTablet}) => {
             return;
         }
         const fetchOptions = getRequestBody('PUT', {completed, taskID, taskTitle})
+        if(completed) {
+            setDoneLoading(true)
+        } else {
+            setRevertLoading(true)
+        }
         const response = await fetch(URL, fetchOptions);
         if(response.status === 200) {
             const updated = {
                 completed,
                 task: taskTitle,
                 taskID
+            }
+            if(completed) {
+                setDoneLoading(false)
+            } else {
+                setRevertLoading(false)
             }
             updateTask(updated)
         }
@@ -39,11 +53,13 @@ const Task = ({task, taskStatus, dateCreated, taskID, isMobileTablet}) => {
     const removeTask = async () => {
         const URL = import.meta.env.VITE_BASE_SERVER_URL + '/delete-task'
         const fetchOptions = getRequestBody('DELETE', {taskID})
+        setDeleteLoading(true)
         const response = await fetch(URL, fetchOptions);
         if(response.status === 200) {
             deleteTask(taskID)
         }
         setIsDeleteVisible(false)
+        setDeleteLoading(false)
     }
 
     const handlers = useSwipeable({
@@ -56,7 +72,7 @@ const Task = ({task, taskStatus, dateCreated, taskID, isMobileTablet}) => {
   return (
         <div className="w-full flex my-2 relative transition-transform ease-in-out duration-300 transform" {...handlers}>
             <button onClick={() => removeTask()} className={`bg-babypowder px-2 py-1 text-sm md:text-base h-fit self-center border-2 border-red-600
-            text-nightblack rounded-md ${isDeleteVisible ? '' : 'absolute top-0 right-0 bottom-0 hidden'}`}>Delete</button>
+            text-nightblack rounded-md ${isDeleteVisible ? '' : 'absolute top-0 right-0 bottom-0 hidden'}`}>{deleteLoading ? <Loading color='nightblack'/> : 'Delete'}</button>
             <div className='flex flex-col flex-1'>
                 {dateCreated && <label className='text-xs ml-[1rem] text-gray-500'>{dateCreated}</label>}
                 {isEditing ? (  
@@ -84,11 +100,15 @@ const Task = ({task, taskStatus, dateCreated, taskID, isMobileTablet}) => {
                     onClick={() => updateTaskStatus(true)} 
                     className='bg-carrot border-2 border-carrot py-1 text-sm md:text-base px-2 ml-2 h-fit self-center rounded-md'
                     >
-                    Done
+                    {doneLoading ? <Loading /> : 'Done'}
                 </button>
             }
-            {taskStatus && <button onClick={() => updateTaskStatus(false)} className='bg-nightblack px-2 ml-2 py-1 border-2 border-nightblack text-sm md:text-base h-fit self-center text-babypowder rounded-md'>Revert</button>}
-            {!isMobileTablet && <button onClick={() => removeTask()} className='bg-babypowder border-2 border-red-600 px-2 ml-2 py-1 text-sm md:text-base h-fit self-center text-nightblack rounded-md'>DEL</button>}
+            {taskStatus && <button onClick={() => updateTaskStatus(false)} className='bg-nightblack px-2 ml-2 py-1 border-2 border-nightblack text-sm md:text-base h-fit self-center text-babypowder rounded-md'>
+                {revertLoading ? <Loading /> : 'Revert'}
+            </button>}
+            {!isMobileTablet && <button onClick={() => removeTask()} className='bg-babypowder border-2 border-red-600 px-2 ml-2 py-1 text-sm md:text-base h-fit self-center text-nightblack rounded-md'>
+                {deleteLoading ? <Loading color='nightblack'/> : 'DEL'}
+            </button>}
         </div>
   )
 }
